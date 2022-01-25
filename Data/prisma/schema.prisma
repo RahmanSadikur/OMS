@@ -1,0 +1,248 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+
+generator client {
+  provider = "prisma-client-js"
+
+}
+
+datasource db {
+
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+//HR
+model UserType {
+
+    id        Int      @id @default(autoincrement())
+    title     String   @db.VarChar(250)
+    updatedAt DateTime @updatedAt @default(now())
+    users User[]
+  
+  }
+  model User{
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(250)
+    address String @db.VarChar(250)
+    nid String @db.VarChar(15)
+    phone String @db.VarChar(11)
+    userTypeId Int @db.Int
+    dailywages Float @db.Double
+    updatedAt DateTime @updatedAt @default(now())
+    usertType UserType @relation(fields: [userTypeId], references: [id])
+    permission Permission?
+    credential Credential?
+    access Access[]
+    paySlips PaySlip[]
+  }
+
+  model Credential{
+    id     Int  @id @db.Int
+    userName String @db.VarChar(250)
+    password String @db.VarChar(250)
+    updatedAt DateTime @updatedAt @default(now())
+    user   User @relation(fields: [id], references: [id])
+   
+  }
+    model PaySlip{
+    id     Int  @id @db.Int
+    month DateTime @db.Date()
+    day DateTime @db.Date() @default(now())
+    total Float @db.Double
+    updatedAt DateTime @updatedAt @default(now())
+    user   User @relation(fields: [id], references: [id])
+   
+  }
+
+
+  //Inventory
+  model Store{
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(250)
+    descrpiction String @db.VarChar(250)
+    primaryPhone String @db.VarChar(11)
+    secondaryPhone String @db.VarChar(11)
+    email String @db.VarChar(250)
+    webaddress String @db.VarChar(250)
+    facebookLink String @db.VarChar(250)
+    youtubeLink String @db.VarChar(250)
+    updatedAt DateTime @updatedAt @default(now())
+    branch Branch[]
+    
+  }
+   model Branch{
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(250)
+    descrpiction String @db.VarChar(250)
+    primaryPhone String @db.VarChar(11)
+    secondaryPhone String @db.VarChar(11)
+    email String @db.VarChar(250)
+    webaddress String @db.VarChar(250)
+    facebookLink String @db.VarChar(250)
+    youtubeLink String @db.VarChar(250)
+    updatedAt DateTime @updatedAt @default(now())
+    storeId Int @db.Int
+    store Store @relation(fields: [id], references: [id])
+    sites Site[]
+    categories CategoryBranchMap[]
+    access Access[]
+    vividExpenses VividExpense[]
+  }
+  model Site{
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(250)
+    descrpiction String @db.VarChar(250)
+    updatedAt DateTime @updatedAt @default(now())
+    branchId Int @db.Int
+    branch Branch @relation(fields: [branchId],references: [id])
+    
+  }
+  model Category{
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(250)
+    descrpiction String @db.VarChar(250)
+    updatedAt DateTime @updatedAt @default(now())
+    subCategories SubCategory[]
+    branchs CategoryBranchMap[]
+  }
+    model SubCategory{
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(250)
+    descrpiction String @db.VarChar(250)
+    updatedAt DateTime @updatedAt @default(now())
+    categoryId Int @db.Int
+    category Category @relation(fields: [categoryId],references: [id])
+    items Item[]
+  }
+    model Item{
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(250)  
+    descrpiction String @db.VarChar(250)
+    updatedAt DateTime @updatedAt @default(now())
+    subCategoryId Int @db.Int
+    subCategory SubCategory @relation(fields: [subCategoryId],references: [id])
+    itemDetails ItemDetailMap[]
+    orderItem OrderItem?
+    chalanItem ChalanItem?
+  }
+   model ItemDetails{
+    id Int @id @default(autoincrement())
+    quantity Float @db.Double
+    size String @db.VarChar(250)
+    basePrice Float @db.Double
+    selling Float @db.Double
+    descrpiction String @db.VarChar(250)
+    updatedAt DateTime @updatedAt @default(now())
+    items ItemDetailMap[]
+  }
+     model ItemDetailMap{
+    itemId Int
+    item Item  @relation(fields: [itemId], references: [id])
+    itemDetailId Int
+    itemDetail ItemDetails  @relation(fields: [itemDetailId], references: [id])
+    updatedAt DateTime @updatedAt @default(now())
+     @@id([itemId, itemDetailId])
+  }
+     model CategoryBranchMap{
+    categoryId Int
+    category Category  @relation(fields: [categoryId], references: [id])
+    branchId Int
+    branch Branch  @relation(fields: [branchId], references: [id])
+    updatedAt DateTime @updatedAt @default(now())
+     @@id([branchId, categoryId])
+  }
+//selling
+    model Order{
+    id Int @id @default(autoincrement())
+    buyerName String @db.VarChar(250) 
+    buyerPhone String @db.VarChar(11) 
+    totalQuantity Float @db.Double @default(0.0)
+    totalPrice Float @db.Double @default(0.0)
+    descrpiction String @db.VarChar(250)
+    orderDate DateTime @updatedAt @default(now())
+    updatedAt DateTime @updatedAt @default(now())
+    orderItems OrderItemMap[]
+  }
+    model OrderItem{
+    id Int @id @default(autoincrement())
+    totalQuantity Float @db.Double @default(0.0)
+    totalPrice Float @db.Double @default(0.0)
+    item Item @relation(fields: [itemId],references: [id])
+    itemId Int
+    updatedAt DateTime @updatedAt @default(now())
+    orders OrderItemMap[]
+  }
+   model OrderItemMap{
+    orderId Int
+    order Order  @relation(fields: [orderId], references: [id])
+    orderItemId Int
+    orderItem OrderItem  @relation(fields: [orderItemId], references: [id])
+    updatedAt DateTime @updatedAt @default(now())
+     @@id([orderId, orderItemId])
+  }
+  //permission
+    model Permission{
+    id     Int  @id @db.Int
+    user   User @relation(fields: [id], references: [id])
+    userId Int @db.Int
+    hasHRPermission Boolean @db.Bit(1)
+    hasSellPermission Boolean @db.Bit(1)
+    hasBuyPermission Boolean @db.Bit(1)
+    hasChalanPermission Boolean @db.Bit(1)
+    hasInventoryPermission Boolean @db.Bit(1)
+    hasAccountPermission Boolean @db.Bit(1)
+    hasOverViewPermission Boolean @db.Bit(1)
+     updatedAt DateTime @updatedAt @default(now())
+  }
+  model Access{
+    userId Int
+    user User  @relation(fields: [userId], references: [id])
+    branchId Int
+    branch Branch  @relation(fields: [branchId], references: [id])
+    hasAccess Boolean @default(false)
+    updatedAt DateTime @updatedAt @default(now())
+     @@id([userId, branchId])
+  }
+  //buying--chalan
+   model Chalan{
+    id Int @id @default(autoincrement())
+    sellerName String @db.VarChar(250) 
+    sellerAddress String @db.VarChar(250) 
+    sellerPhone String @db.VarChar(11) 
+    totalQuantity Float @db.Double @default(0.0)
+    totalPrice Float @db.Double @default(0.0)
+    descrpiction String @db.VarChar(250)
+    chalanDate DateTime @updatedAt @default(now())
+    updatedAt DateTime @updatedAt @default(now())
+    ChalanItems ChalanItemMap[]
+  }
+    model ChalanItem{
+    id Int @id @default(autoincrement())
+    totalQuantity Float @db.Double @default(0.0)
+    totalPrice Float @db.Double @default(0.0)
+    item Item @relation(fields: [itemId],references: [id])
+    itemId Int
+    updatedAt DateTime @updatedAt @default(now())
+    chalans ChalanItemMap[]
+  }
+   model ChalanItemMap{
+    chalanId Int
+    chalan Chalan  @relation(fields: [chalanId], references: [id])
+    chalanItemId Int
+    chalanItem ChalanItem  @relation(fields: [chalanItemId], references: [id])
+    updatedAt DateTime @updatedAt @default(now())
+     @@id([chalanId, chalanItemId])
+  }
+  //Expense
+    model VividExpense{
+    id Int @id @default(autoincrement())
+    date DateTime @updatedAt @default(now())
+    totalcost Float @db.Double @default(0.0)
+    description String @db.VarChar(250)
+    branch Branch @relation(fields: [branchId],references: [id])
+    branchId Int
+    updatedAt DateTime @updatedAt @default(now())
+   
+  }

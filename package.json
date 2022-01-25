@@ -1,0 +1,28 @@
+{
+  "name": "expressjs_jwt_prisma_mysql",
+  "version": "0.0.1",
+  "description": "Rest api using express js mysql prisma and jwt auth",
+  "main": "app.js",
+  "scripts": {
+    "Start": "nodemon app.js"
+  },
+  "keywords": [
+    "Express-js",
+    "rest_api",
+    "prisma",
+    "mysql",
+    "jwt"
+  ],
+  "author": "Sadikur Rahman",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^3.8.1",
+    "express": "^4.17.2",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "dotenv": "^14.2.0",
+    "nodemon": "^2.0.15",
+    "prisma": "^3.8.1"
+  }
+}
