@@ -19,6 +19,7 @@ model UserType {
     id        Int      @id @default(autoincrement())
     title     String   @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
+    isRemoved Boolean @db.Bit(1) @default(false)
     users User[]
   
   }
@@ -31,6 +32,7 @@ model UserType {
     userTypeId Int @db.Int
     dailywages Float @db.Double
     updatedAt DateTime @updatedAt @default(now())
+    isRemoved Boolean @db.Bit(1) @default(false)
     usertType UserType @relation(fields: [userTypeId], references: [id])
     permission Permission?
     credential Credential?
@@ -43,16 +45,20 @@ model UserType {
     userName String @db.VarChar(250)
     password String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
+    isRemoved Boolean @db.Bit(1) @default(false)
     user   User @relation(fields: [id], references: [id])
    
   }
     model PaySlip{
-    id     Int  @id @db.Int
+    id     Int  @id @db.Int @default(autoincrement())
     month DateTime @db.Date()
     day DateTime @db.Date() @default(now())
     total Float @db.Double
     updatedAt DateTime @updatedAt @default(now())
-    user   User @relation(fields: [id], references: [id])
+    userId Int @db.Int
+    isRemoved Boolean @db.Bit(1) @default(false)
+    user   User @relation(fields: [userId], references: [id])
+
    
   }
 
@@ -69,6 +75,7 @@ model UserType {
     facebookLink String @db.VarChar(250)
     youtubeLink String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
+    isRemoved Boolean @db.Bit(1) @default(false)
     branch Branch[]
     
   }
@@ -84,7 +91,8 @@ model UserType {
     youtubeLink String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
     storeId Int @db.Int
-    store Store @relation(fields: [id], references: [id])
+    isRemoved Boolean @db.Bit(1) @default(false)
+    store Store @relation(fields: [storeId], references: [id])
     sites Site[]
     categories CategoryBranchMap[]
     access Access[]
@@ -96,6 +104,7 @@ model UserType {
     descrpiction String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
     branchId Int @db.Int
+    isRemoved Boolean @db.Bit(1) @default(false)
     branch Branch @relation(fields: [branchId],references: [id])
     
   }
@@ -104,6 +113,7 @@ model UserType {
     name String @db.VarChar(250)
     descrpiction String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
+    isRemoved Boolean @db.Bit(1) @default(false)
     subCategories SubCategory[]
     branchs CategoryBranchMap[]
   }
@@ -113,6 +123,7 @@ model UserType {
     descrpiction String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
     categoryId Int @db.Int
+    isRemoved Boolean @db.Bit(1) @default(false)
     category Category @relation(fields: [categoryId],references: [id])
     items Item[]
   }
@@ -122,6 +133,7 @@ model UserType {
     descrpiction String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
     subCategoryId Int @db.Int
+    isRemoved Boolean @db.Bit(1) @default(false)
     subCategory SubCategory @relation(fields: [subCategoryId],references: [id])
     itemDetails ItemDetailMap[]
     orderItem OrderItem?
@@ -135,6 +147,7 @@ model UserType {
     selling Float @db.Double
     descrpiction String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
+    isRemoved Boolean @db.Bit(1) @default(false)
     items ItemDetailMap[]
   }
      model ItemDetailMap{
@@ -142,6 +155,7 @@ model UserType {
     item Item  @relation(fields: [itemId], references: [id])
     itemDetailId Int
     itemDetail ItemDetails  @relation(fields: [itemDetailId], references: [id])
+    isRemoved Boolean @db.Bit(1) @default(false)
     updatedAt DateTime @updatedAt @default(now())
      @@id([itemId, itemDetailId])
   }
@@ -150,6 +164,7 @@ model UserType {
     category Category  @relation(fields: [categoryId], references: [id])
     branchId Int
     branch Branch  @relation(fields: [branchId], references: [id])
+    isRemoved Boolean @db.Bit(1) @default(false)
     updatedAt DateTime @updatedAt @default(now())
      @@id([branchId, categoryId])
   }
@@ -162,6 +177,7 @@ model UserType {
     totalPrice Float @db.Double @default(0.0)
     descrpiction String @db.VarChar(250)
     orderDate DateTime @updatedAt @default(now())
+    isRemoved Boolean @db.Bit(1) @default(false)
     updatedAt DateTime @updatedAt @default(now())
     orderItems OrderItemMap[]
   }
@@ -170,7 +186,8 @@ model UserType {
     totalQuantity Float @db.Double @default(0.0)
     totalPrice Float @db.Double @default(0.0)
     item Item @relation(fields: [itemId],references: [id])
-    itemId Int
+    itemId Int @db.Int
+    isRemoved Boolean @db.Bit(1) @default(false)
     updatedAt DateTime @updatedAt @default(now())
     orders OrderItemMap[]
   }
@@ -179,6 +196,7 @@ model UserType {
     order Order  @relation(fields: [orderId], references: [id])
     orderItemId Int
     orderItem OrderItem  @relation(fields: [orderItemId], references: [id])
+    isRemoved Boolean @db.Bit(1) @default(false)
     updatedAt DateTime @updatedAt @default(now())
      @@id([orderId, orderItemId])
   }
@@ -194,6 +212,7 @@ model UserType {
     hasInventoryPermission Boolean @db.Bit(1)
     hasAccountPermission Boolean @db.Bit(1)
     hasOverViewPermission Boolean @db.Bit(1)
+    isRemoved Boolean @db.Bit(1) @default(false)
      updatedAt DateTime @updatedAt @default(now())
   }
   model Access{
@@ -202,6 +221,7 @@ model UserType {
     branchId Int
     branch Branch  @relation(fields: [branchId], references: [id])
     hasAccess Boolean @default(false)
+    isRemoved Boolean @db.Bit(1) @default(false)
     updatedAt DateTime @updatedAt @default(now())
      @@id([userId, branchId])
   }
@@ -216,6 +236,7 @@ model UserType {
     descrpiction String @db.VarChar(250)
     chalanDate DateTime @updatedAt @default(now())
     updatedAt DateTime @updatedAt @default(now())
+    isRemoved Boolean @db.Bit(1) @default(false)
     ChalanItems ChalanItemMap[]
   }
     model ChalanItem{
@@ -223,7 +244,8 @@ model UserType {
     totalQuantity Float @db.Double @default(0.0)
     totalPrice Float @db.Double @default(0.0)
     item Item @relation(fields: [itemId],references: [id])
-    itemId Int
+    itemId Int @db.Int
+    isRemoved Boolean @db.Bit(1) @default(false)
     updatedAt DateTime @updatedAt @default(now())
     chalans ChalanItemMap[]
   }
@@ -232,6 +254,7 @@ model UserType {
     chalan Chalan  @relation(fields: [chalanId], references: [id])
     chalanItemId Int
     chalanItem ChalanItem  @relation(fields: [chalanItemId], references: [id])
+    isRemoved Boolean @db.Bit(1) @default(false)
     updatedAt DateTime @updatedAt @default(now())
      @@id([chalanId, chalanItemId])
   }
@@ -242,7 +265,8 @@ model UserType {
     totalcost Float @db.Double @default(0.0)
     description String @db.VarChar(250)
     branch Branch @relation(fields: [branchId],references: [id])
-    branchId Int
+    branchId Int @db.Int
+    isRemoved Boolean @db.Bit(1) @default(false)
     updatedAt DateTime @updatedAt @default(now())
    
   }
