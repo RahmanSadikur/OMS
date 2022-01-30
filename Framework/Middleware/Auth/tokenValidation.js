@@ -1,7 +1,7 @@
 const{ verify}=require("jsonwebtoken")
 module.exports={
     ISAuthentic:(req,res,next)=>{
-        const token=req.get("authorization");
+        let token=req.get("authorization");
         if(token){
             token=token.slice(7);
             verify(token,process.env.tokenSecret,(err,decoded)=>{

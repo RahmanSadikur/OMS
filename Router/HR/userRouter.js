@@ -1,5 +1,5 @@
 const express=require('express');
-const repo=require("../../Repository/HR/userTypeRepo")
+const repo=require("../../Repository/HR/userRepo")
 const router=express.Router();
 router.get('/',repo.GetAll,(req,res)=>{
     res.json({"data":res.data,"Success":0,"haserror":false

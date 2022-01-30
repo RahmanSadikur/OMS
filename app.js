@@ -1,10 +1,20 @@
 require('dotenv').config();
 const express=require('express');
-const{ISAuthentic}=require("./Framework/Middleware/Auth/tokenValidation")
+const bodyParser=require("body-parser");
+const cors=require("cors");
+const{ISAuthentic}=require("./Framework/Middleware/Auth/tokenValidation");
 const app=express();
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(cors())
 const userTypeRouter=require('./Router/HR/userTypeRouter');
+const userRouter=require('./Router/HR/userRouter');
 const authRouter=require('./Router/Auth/authRouter');
+const payslipRouter=require('./Router/HR/payslipRouter');
+const credentialRouter=require('./Router/HR/credentialRouter');
 app.use('/api/auth',authRouter);
 app.use('/api/usertype',ISAuthentic,userTypeRouter);
+app.use('/api/user',ISAuthentic,userRouter);
+app.use('/api/user/credential',ISAuthentic,credentialRouter);
+app.use('/api/user/payslip',ISAuthentic,payslipRouter);
 app.listen(process.env.port,()=>console.log('Server Started at port 69'));

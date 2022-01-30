@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 module.exports={
     async Login(req,res,next){
          try {
-         const user= await prisma.credential.findFirst({where:{userName:req.body.userName}});
+         const user= await prisma.credential.findFirst({where:{userName:req.body.userName,isRemoved:false}});
          if(user!=null||user!=undefined){
             if((await user).password==req.body.password){
                   user.password==undefined;
