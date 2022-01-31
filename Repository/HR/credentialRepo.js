@@ -23,6 +23,26 @@ module.exports={
          }
          next();
      },
+     async changePassword(req,res,next){
+
+        try {
+          
+           const id=parseInt(req.body.id);
+       
+           let credential= await prisma.credential.update({where:{id:id},data:{
+               isRemoved:false,
+               password:req.body.password,
+           }});
+              res.message="New password generated successfully."; 
+           
+       
+        res.data=credential;    
+        } catch (error) {
+        res.status(500).json({message:error.message});
+
+        }
+        next();
+    },
      async disable(req,res,next){
         
          try {

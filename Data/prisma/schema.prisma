@@ -51,7 +51,7 @@ model UserType {
   }
     model PaySlip{
     id     Int  @id @db.Int @default(autoincrement())
-    month DateTime @db.Date()
+    month Int  @db.Int
     day DateTime @db.Date() @default(now())
     total Float @db.Double
     updatedAt DateTime @updatedAt @default(now())
@@ -183,6 +183,7 @@ model UserType {
   }
     model OrderItem{
     id Int @id @default(autoincrement())
+    size String @db.VarChar(250)
     totalQuantity Float @db.Double @default(0.0)
     totalPrice Float @db.Double @default(0.0)
     item Item @relation(fields: [itemId],references: [id])
@@ -242,6 +243,7 @@ model UserType {
     model ChalanItem{
     id Int @id @default(autoincrement())
     totalQuantity Float @db.Double @default(0.0)
+    size String @db.VarChar(250)
     totalPrice Float @db.Double @default(0.0)
     item Item @relation(fields: [itemId],references: [id])
     itemId Int @db.Int

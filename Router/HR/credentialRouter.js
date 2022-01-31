@@ -7,7 +7,14 @@ router.post('/generate/:id',repo.Generate,(req,res)=>{
 
     res.json({"data":res.data,"Success":0,"haserror":false
 });
-})
+}),
+//change password
+router.post('/passwordchange',repo.changePassword,(req,res)=>{
+
+    res.json({"data":res.data,"Success":0,"haserror":false
+});
+}),
+
 //enable credential
 router.post('/enable/:id',repo.enabled,(req,res)=>{
 
