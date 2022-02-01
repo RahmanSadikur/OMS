@@ -1,4 +1,14 @@
 -- CreateTable
+CREATE TABLE `UserType` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(250) NOT NULL,
+    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(250) NOT NULL,
@@ -8,6 +18,7 @@ CREATE TABLE `User` (
     `userTypeId` INTEGER NOT NULL,
     `dailywages` DOUBLE NOT NULL,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -18,17 +29,20 @@ CREATE TABLE `Credential` (
     `userName` VARCHAR(250) NOT NULL,
     `password` VARCHAR(250) NOT NULL,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `PaySlip` (
-    `id` INTEGER NOT NULL,
-    `month` DATE NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `day` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `total` DOUBLE NOT NULL,
+    `description` VARCHAR(250) NOT NULL,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `userId` INTEGER NOT NULL,
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -45,6 +59,7 @@ CREATE TABLE `Store` (
     `facebookLink` VARCHAR(250) NOT NULL,
     `youtubeLink` VARCHAR(250) NOT NULL,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -62,6 +77,7 @@ CREATE TABLE `Branch` (
     `youtubeLink` VARCHAR(250) NOT NULL,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `storeId` INTEGER NOT NULL,
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -73,6 +89,7 @@ CREATE TABLE `Site` (
     `descrpiction` VARCHAR(250) NOT NULL,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `branchId` INTEGER NOT NULL,
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -83,6 +100,7 @@ CREATE TABLE `Category` (
     `name` VARCHAR(250) NOT NULL,
     `descrpiction` VARCHAR(250) NOT NULL,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -94,6 +112,7 @@ CREATE TABLE `SubCategory` (
     `descrpiction` VARCHAR(250) NOT NULL,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `categoryId` INTEGER NOT NULL,
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -105,6 +124,7 @@ CREATE TABLE `Item` (
     `descrpiction` VARCHAR(250) NOT NULL,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `subCategoryId` INTEGER NOT NULL,
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -118,23 +138,17 @@ CREATE TABLE `ItemDetails` (
     `selling` DOUBLE NOT NULL,
     `descrpiction` VARCHAR(250) NOT NULL,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
+    `itemId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `ItemDetailMap` (
-    `itemId` INTEGER NOT NULL,
-    `itemDetailId` INTEGER NOT NULL,
-    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-
-    PRIMARY KEY (`itemId`, `itemDetailId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `CategoryBranchMap` (
     `categoryId` INTEGER NOT NULL,
     `branchId` INTEGER NOT NULL,
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`branchId`, `categoryId`)
@@ -149,6 +163,7 @@ CREATE TABLE `Order` (
     `totalPrice` DOUBLE NOT NULL DEFAULT 0.0,
     `descrpiction` VARCHAR(250) NOT NULL,
     `orderDate` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -159,20 +174,15 @@ CREATE TABLE `OrderItem` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `totalQuantity` DOUBLE NOT NULL DEFAULT 0.0,
     `totalPrice` DOUBLE NOT NULL DEFAULT 0.0,
+    `size` INTEGER NOT NULL,
     `itemId` INTEGER NOT NULL,
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `orderId` INTEGER NOT NULL,
 
+    UNIQUE INDEX `OrderItem_size_key`(`size`),
     UNIQUE INDEX `OrderItem_itemId_key`(`itemId`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `OrderItemMap` (
-    `orderId` INTEGER NOT NULL,
-    `orderItemId` INTEGER NOT NULL,
-    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-
-    PRIMARY KEY (`orderId`, `orderItemId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -186,6 +196,7 @@ CREATE TABLE `Permission` (
     `hasInventoryPermission` BIT(1) NOT NULL,
     `hasAccountPermission` BIT(1) NOT NULL,
     `hasOverViewPermission` BIT(1) NOT NULL,
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -196,6 +207,7 @@ CREATE TABLE `Access` (
     `userId` INTEGER NOT NULL,
     `branchId` INTEGER NOT NULL,
     `hasAccess` BOOLEAN NOT NULL DEFAULT false,
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`userId`, `branchId`)
@@ -212,6 +224,7 @@ CREATE TABLE `Chalan` (
     `descrpiction` VARCHAR(250) NOT NULL,
     `chalanDate` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -221,20 +234,15 @@ CREATE TABLE `ChalanItem` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `totalQuantity` DOUBLE NOT NULL DEFAULT 0.0,
     `totalPrice` DOUBLE NOT NULL DEFAULT 0.0,
+    `size` INTEGER NOT NULL,
     `itemId` INTEGER NOT NULL,
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `chalanId` INTEGER NOT NULL,
 
+    UNIQUE INDEX `ChalanItem_size_key`(`size`),
     UNIQUE INDEX `ChalanItem_itemId_key`(`itemId`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `ChalanItemMap` (
-    `chalanId` INTEGER NOT NULL,
-    `chalanItemId` INTEGER NOT NULL,
-    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-
-    PRIMARY KEY (`chalanId`, `chalanItemId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -244,6 +252,7 @@ CREATE TABLE `VividExpense` (
     `totalcost` DOUBLE NOT NULL DEFAULT 0.0,
     `description` VARCHAR(250) NOT NULL,
     `branchId` INTEGER NOT NULL,
+    `isRemoved` BIT(1) NOT NULL DEFAULT false,
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -256,10 +265,10 @@ ALTER TABLE `User` ADD CONSTRAINT `User_userTypeId_fkey` FOREIGN KEY (`userTypeI
 ALTER TABLE `Credential` ADD CONSTRAINT `Credential_id_fkey` FOREIGN KEY (`id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `PaySlip` ADD CONSTRAINT `PaySlip_id_fkey` FOREIGN KEY (`id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `PaySlip` ADD CONSTRAINT `PaySlip_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Branch` ADD CONSTRAINT `Branch_id_fkey` FOREIGN KEY (`id`) REFERENCES `Store`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Branch` ADD CONSTRAINT `Branch_storeId_fkey` FOREIGN KEY (`storeId`) REFERENCES `Store`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Site` ADD CONSTRAINT `Site_branchId_fkey` FOREIGN KEY (`branchId`) REFERENCES `Branch`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -271,10 +280,7 @@ ALTER TABLE `SubCategory` ADD CONSTRAINT `SubCategory_categoryId_fkey` FOREIGN K
 ALTER TABLE `Item` ADD CONSTRAINT `Item_subCategoryId_fkey` FOREIGN KEY (`subCategoryId`) REFERENCES `SubCategory`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `ItemDetailMap` ADD CONSTRAINT `ItemDetailMap_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `Item`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `ItemDetailMap` ADD CONSTRAINT `ItemDetailMap_itemDetailId_fkey` FOREIGN KEY (`itemDetailId`) REFERENCES `ItemDetails`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `ItemDetails` ADD CONSTRAINT `ItemDetails_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `Item`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `CategoryBranchMap` ADD CONSTRAINT `CategoryBranchMap_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `Category`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -283,13 +289,13 @@ ALTER TABLE `CategoryBranchMap` ADD CONSTRAINT `CategoryBranchMap_categoryId_fke
 ALTER TABLE `CategoryBranchMap` ADD CONSTRAINT `CategoryBranchMap_branchId_fkey` FOREIGN KEY (`branchId`) REFERENCES `Branch`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `OrderItem` ADD CONSTRAINT `OrderItem_size_fkey` FOREIGN KEY (`size`) REFERENCES `ItemDetails`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `OrderItem` ADD CONSTRAINT `OrderItem_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `Item`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `OrderItemMap` ADD CONSTRAINT `OrderItemMap_orderId_fkey` FOREIGN KEY (`orderId`) REFERENCES `Order`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `OrderItemMap` ADD CONSTRAINT `OrderItemMap_orderItemId_fkey` FOREIGN KEY (`orderItemId`) REFERENCES `OrderItem`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `OrderItem` ADD CONSTRAINT `OrderItem_orderId_fkey` FOREIGN KEY (`orderId`) REFERENCES `Order`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Permission` ADD CONSTRAINT `Permission_id_fkey` FOREIGN KEY (`id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -301,13 +307,13 @@ ALTER TABLE `Access` ADD CONSTRAINT `Access_userId_fkey` FOREIGN KEY (`userId`) 
 ALTER TABLE `Access` ADD CONSTRAINT `Access_branchId_fkey` FOREIGN KEY (`branchId`) REFERENCES `Branch`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `ChalanItem` ADD CONSTRAINT `ChalanItem_size_fkey` FOREIGN KEY (`size`) REFERENCES `ItemDetails`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `ChalanItem` ADD CONSTRAINT `ChalanItem_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `Item`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `ChalanItemMap` ADD CONSTRAINT `ChalanItemMap_chalanId_fkey` FOREIGN KEY (`chalanId`) REFERENCES `Chalan`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `ChalanItemMap` ADD CONSTRAINT `ChalanItemMap_chalanItemId_fkey` FOREIGN KEY (`chalanItemId`) REFERENCES `ChalanItem`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `ChalanItem` ADD CONSTRAINT `ChalanItem_chalanId_fkey` FOREIGN KEY (`chalanId`) REFERENCES `Chalan`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `VividExpense` ADD CONSTRAINT `VividExpense_branchId_fkey` FOREIGN KEY (`branchId`) REFERENCES `Branch`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

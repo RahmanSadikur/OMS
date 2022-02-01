@@ -51,9 +51,9 @@ model UserType {
   }
     model PaySlip{
     id     Int  @id @db.Int @default(autoincrement())
-    month Int  @db.Int
     day DateTime @db.Date() @default(now())
     total Float @db.Double
+    description String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
     userId Int @db.Int
     isRemoved Boolean @db.Bit(1) @default(false)
@@ -135,7 +135,7 @@ model UserType {
     subCategoryId Int @db.Int
     isRemoved Boolean @db.Bit(1) @default(false)
     subCategory SubCategory @relation(fields: [subCategoryId],references: [id])
-    itemDetails ItemDetailMap[]
+    itemDetails ItemDetails[]
     orderItem OrderItem?
     chalanItem ChalanItem?
   }
@@ -148,17 +148,20 @@ model UserType {
     descrpiction String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
     isRemoved Boolean @db.Bit(1) @default(false)
-    items ItemDetailMap[]
+    item Item @relation(fields: [itemId],references: [id])
+    itemId Int @db.Int
+    orderItem OrderItem?
+    chalanItem ChalanItem?
   }
-     model ItemDetailMap{
-    itemId Int
-    item Item  @relation(fields: [itemId], references: [id])
-    itemDetailId Int
-    itemDetail ItemDetails  @relation(fields: [itemDetailId], references: [id])
-    isRemoved Boolean @db.Bit(1) @default(false)
-    updatedAt DateTime @updatedAt @default(now())
-     @@id([itemId, itemDetailId])
-  }
+  //    model ItemDetailMap{
+  //   itemId Int
+  //   item Item  @relation(fields: [itemId], references: [id])
+  //   itemDetailId Int
+  //   itemDetail ItemDetails  @relation(fields: [itemDetailId], references: [id])
+  //   isRemoved Boolean @db.Bit(1) @default(false)
+  //   updatedAt DateTime @updatedAt @default(now())
+  //    @@id([itemId, itemDetailId])
+  // }
      model CategoryBranchMap{
     categoryId Int
     category Category  @relation(fields: [categoryId], references: [id])
@@ -179,28 +182,30 @@ model UserType {
     orderDate DateTime @updatedAt @default(now())
     isRemoved Boolean @db.Bit(1) @default(false)
     updatedAt DateTime @updatedAt @default(now())
-    orderItems OrderItemMap[]
+    orderItems OrderItem[]
   }
     model OrderItem{
-    id Int @id @default(autoincrement())
-    size String @db.VarChar(250)
+    id Int @id @default(autoincrement())  
     totalQuantity Float @db.Double @default(0.0)
     totalPrice Float @db.Double @default(0.0)
+    size Int @db.Int
+    itemDetails ItemDetails @relation(fields: [size],references: [id])
     item Item @relation(fields: [itemId],references: [id])
     itemId Int @db.Int
     isRemoved Boolean @db.Bit(1) @default(false)
     updatedAt DateTime @updatedAt @default(now())
-    orders OrderItemMap[]
+    order Order @relation(fields: [orderId],references: [id])
+    orderId Int @db.Int
   }
-   model OrderItemMap{
-    orderId Int
-    order Order  @relation(fields: [orderId], references: [id])
-    orderItemId Int
-    orderItem OrderItem  @relation(fields: [orderItemId], references: [id])
-    isRemoved Boolean @db.Bit(1) @default(false)
-    updatedAt DateTime @updatedAt @default(now())
-     @@id([orderId, orderItemId])
-  }
+  //  model OrderItemMap{
+  //   orderId Int
+  //   order Order  @relation(fields: [orderId], references: [id])
+  //   orderItemId Int
+  //   orderItem OrderItem  @relation(fields: [orderItemId], references: [id])
+  //   isRemoved Boolean @db.Bit(1) @default(false)
+  //   updatedAt DateTime @updatedAt @default(now())
+  //    @@id([orderId, orderItemId])
+  // }
   //permission
     model Permission{
     id     Int  @id @db.Int
@@ -238,28 +243,31 @@ model UserType {
     chalanDate DateTime @updatedAt @default(now())
     updatedAt DateTime @updatedAt @default(now())
     isRemoved Boolean @db.Bit(1) @default(false)
-    ChalanItems ChalanItemMap[]
+    ChalanItems ChalanItem[]
   }
     model ChalanItem{
     id Int @id @default(autoincrement())
     totalQuantity Float @db.Double @default(0.0)
-    size String @db.VarChar(250)
     totalPrice Float @db.Double @default(0.0)
+    size Int @db.Int
+    itemDetails ItemDetails @relation(fields: [size],references: [id])
     item Item @relation(fields: [itemId],references: [id])
     itemId Int @db.Int
     isRemoved Boolean @db.Bit(1) @default(false)
     updatedAt DateTime @updatedAt @default(now())
-    chalans ChalanItemMap[]
+    chalan Chalan @relation(fields: [chalanId],references: [id]) 
+    chalanId Int @db.Int
+    
   }
-   model ChalanItemMap{
-    chalanId Int
-    chalan Chalan  @relation(fields: [chalanId], references: [id])
-    chalanItemId Int
-    chalanItem ChalanItem  @relation(fields: [chalanItemId], references: [id])
-    isRemoved Boolean @db.Bit(1) @default(false)
-    updatedAt DateTime @updatedAt @default(now())
-     @@id([chalanId, chalanItemId])
-  }
+  //  model ChalanItemMap{
+  //   chalanId Int
+  //   chalan Chalan  @relation(fields: [chalanId], references: [id])
+  //   chalanItemId Int
+  //   chalanItem ChalanItem  @relation(fields: [chalanItemId], references: [id])
+  //   isRemoved Boolean @db.Bit(1) @default(false)
+  //   updatedAt DateTime @updatedAt @default(now())
+  //    @@id([chalanId, chalanItemId])
+  // }
   //Expense
     model VividExpense{
     id Int @id @default(autoincrement())
