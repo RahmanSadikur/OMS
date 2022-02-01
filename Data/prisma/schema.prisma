@@ -176,11 +176,14 @@ model UserType {
     id Int @id @default(autoincrement())
     buyerName String @db.VarChar(250) 
     buyerPhone String @db.VarChar(11) 
+    descrpiction String @db.VarChar(250)
     totalQuantity Float @db.Double @default(0.0)
     totalPrice Float @db.Double @default(0.0)
-    descrpiction String @db.VarChar(250)
-    orderDate DateTime @updatedAt @default(now())
+    payedMoney Float @db.Double @default(0.0)
+    balance Float @db.Double @default(0.0)
+    isCompleted Boolean @db.Bit(1) @default(false)
     isRemoved Boolean @db.Bit(1) @default(false)
+    orderDate DateTime @updatedAt @default(now())   
     updatedAt DateTime @updatedAt @default(now())
     orderItems OrderItem[]
   }
@@ -237,12 +240,15 @@ model UserType {
     sellerName String @db.VarChar(250) 
     sellerAddress String @db.VarChar(250) 
     sellerPhone String @db.VarChar(11) 
+    descrpiction String @db.VarChar(250)
     totalQuantity Float @db.Double @default(0.0)
     totalPrice Float @db.Double @default(0.0)
-    descrpiction String @db.VarChar(250)
+    payedMoney Float @db.Double @default(0.0)
+    due Float @db.Double @default(0.0)
+    isCompleted Boolean @db.Bit(1) @default(false)
+    isRemoved Boolean @db.Bit(1) @default(false)   
     chalanDate DateTime @updatedAt @default(now())
     updatedAt DateTime @updatedAt @default(now())
-    isRemoved Boolean @db.Bit(1) @default(false)
     ChalanItems ChalanItem[]
   }
     model ChalanItem{
