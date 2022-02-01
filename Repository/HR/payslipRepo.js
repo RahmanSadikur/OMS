@@ -2,28 +2,25 @@ const { restart } = require('nodemon');
 const { PrismaClient } =require('@prisma/client');
 const prisma = new PrismaClient();
 module.exports={
-     async GetAllbyMonth(req,res,next){    
+    async GetAllUsingDateRange(req,res,next){    
         try {
-        
-            const month=parseInt(req.params.month);
-            let payslip=await prisma.paySlip.findMany({where:{isRemoved:false,month:month}});
-            res.data=payslip;
-        } catch (error) {
-            res.status(500).json({message:error.message});
-        }
-   
-        next();
-    },
-    async GetAllbyYear(req,res,next){    
-        try {
-            const year=req.params.year;
-            var firstdate = new Date(year, 0, 1);
-            var lastdate = new Date(year, 11, 0);
+            let f=req.params.firstdate;
+            let  l=req.params.lastdate;
+            var firstdate = new Date(f);
+            var lastdate = new Date(l);
           
             let payslip=await prisma.paySlip.findMany({where:{isRemoved:false,updatedAt:{
                 lte: lastdate,
                 gte: firstdate,
-            }}});
+            },
+        },include:{
+            user:{
+                select:{
+                    name:true,
+                },
+            },
+        },
+    });
             res.data=payslip;
         } catch (error) {
             res.status(500).json({message:error.message});
@@ -31,57 +28,26 @@ module.exports={
    
         next();
     },
-    async GetAllByToday(req,res,next){
-        try {
-           var firstdate =new Date(new Date().setHours(0, 0, 0, 0));
-           var lastdate = new Date(new Date().setHours(23, 59, 59, 999));
-     
-              let paySlip=await prisma.paySlip.findMany({where:{isRemoved:false,updatedAt:{
-                lte: lastdate,
-                gte: firstdate,
-            },},},);
-              
-            
-            
-            res.data=paySlip;          
-         
-  
-       } catch (error) {
-           res.status(500).json({message:error.message});
-       }
-  
-       next();
-       },
-
-     async GetByMonth(req,res,next){
-      try {
-         const id=parseInt(req.params.id);
-         const month=parseInt(req.params.month);
-           if(!isNaN(id)){
-            let paySlip=await prisma.paySlip.findMany({where:{isRemoved:false,userId:id,month:month,}});
-            res.data=paySlip;          
-           }
-           else{
-
-           }
-
-     } catch (error) {
-         res.status(500).json({message:error.message});
-     }
-
-     next();
-     },
-     async GetByYear(req,res,next){
+     async GetUsingDateRange(req,res,next){
         try {
            const id=parseInt(req.params.id);
-           const year=req.params.year;
-           var firstdate = new Date(year, 0, 1);
-           var lastdate = new Date(year, 11, 0);
+            let  f=req.params.firstdate;
+            let l=req.params.lastdate;
+            var firstdate = new Date(f);
+            var lastdate = new Date(l);
              if(!isNaN(id)){
               let paySlip=await prisma.paySlip.findMany({where:{isRemoved:false,userId:id,updatedAt:{
                 lte: lastdate,
                 gte: firstdate,
-            }}});
+            },
+        },include:{
+            user:{
+                select:{
+                    name:true,
+                },
+            },
+        },
+    });
               res.data=paySlip;          
              }
              else{
@@ -103,7 +69,15 @@ module.exports={
               let paySlip=await prisma.paySlip.findMany({where:{isRemoved:false,userId:id,updatedAt:{
                 lte: lastdate,
                 gte: firstdate,
-            }}});
+            },
+        },include:{
+            user:{
+                select:{
+                    name:true,
+                },
+            },
+        },
+    });
               res.data=paySlip;          
              }
              else{
@@ -116,13 +90,36 @@ module.exports={
   
        next();
        },
-
+       async GetAllByToday(req,res,next){    
+        try {
+            var firstdate =new Date(new Date().setHours(0, 0, 0, 0));
+            var lastdate = new Date(new Date().setHours(23, 59, 59, 999));
+          
+            let payslip=await prisma.paySlip.findMany({where:{isRemoved:false,updatedAt:{
+                lte: lastdate,
+                gte: firstdate,
+            },
+        },include:{
+            user:{
+                select:{
+                    name:true,
+                },
+            },
+        },
+    });
+            res.data=payslip;
+        } catch (error) {
+            res.status(500).json({message:error.message});
+        }
+   
+        next();
+    },
      async Save(req,res,next){
 
          try {
             let payslip = await prisma.paySlip.create({data:{
                 isRemoved:false,
-                month:parseInt(req.body.month),
+                description:req.body.description,
                 total:parseFloat(req.body.total) ,
                 day:new Date(req.body.day),
                 userId:parseInt(req.body.userId),
@@ -138,5 +135,37 @@ module.exports={
          }
          next();
      },
+     async GenerateDailySalaryPayslip(req,res,next){
+        try {
+            let id=parseInt(req.body.userId);
+            if(!isNaN(id)){
+                let user=await prisma.user.findFirst({where:{id:id}});
+                if(user!==null){
+                    let payslip = await prisma.paySlip.create({data:{
+                        isRemoved:false,
+                        description:Date.now().toString()+"/'s salary entried of" +user.name,
+                        total:user.dailywages,
+                        day:new Date(Date.now()),
+                        userId:user.id,
+                        updatedAt:new Date(Date.now()),
+                        
+                    }});
+                    res.data=payslip; 
+                }else{
+                    res.message="User not found."; 
+                }
+
+                  
+            }else{
+                res.message="Invalid request."; 
+            }          
+       
+          
+        } catch (error) {
+        res.status(500).json({message:error.message});
+
+        }
+        next();
+    },
  
  };

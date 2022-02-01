@@ -1,23 +1,18 @@
 const express=require('express');
 const repo=require("../../Repository/HR/payslipRepo");
 const router=express.Router();
-//geting all by year
-router.get('/getallbyyear/:year',repo.GetAllbyYear,(req,res)=>{
+//geting all by any specific date range
+router.get('/getallusingdaterange/:firstdate/:lastdate',repo.GetAllUsingDateRange,(req,res)=>{
     res.json({"data":res.data,"Success":0,"haserror":false
 });
 })
-//geting all by month
-router.get('/getallbymonth/:month',repo.GetAllbyMonth,( req , res)=>{
+//geting today's all payslip
+router.get('/getallbytoday',repo.GetAllByToday,( req , res)=>{
     res.json({"data":res.data,"Success":0,"haserror":false
 });
 })
-//geting one's monthly payslip
-router.get('/getbymonth/:id/:month',repo.GetByMonth,( req , res)=>{
-    res.json({"data":res.data,"Success":0,"haserror":false
-});
-})
-//geting one's yearly payslip
-router.get('/getbyyear/:id/:year',repo.GetByYear,( req , res)=>{
+//geting one's  payslip using specific date range
+router.get('/getusingdaterange/:id/:firstdate/:lastdate',repo.GetUsingDateRange,( req , res)=>{
     res.json({"data":res.data,"Success":0,"haserror":false
 });
 })
@@ -27,7 +22,7 @@ router.get('/:id',repo.GetByToday,( req , res)=>{
 });
 })
 //geting daily payslips
-router.get('/',repo.GetAllByToday,( req , res)=>{
+router.post('/genaratesalary',repo.GenerateDailySalaryPayslip,( req , res)=>{
     res.json({"data":res.data,"Success":0,"haserror":false
 });
 })
