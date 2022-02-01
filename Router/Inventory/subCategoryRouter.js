@@ -1,5 +1,5 @@
 const express=require('express');
-const repo=require("../../Repository/Inventory/branchRepo")
+const repo=require("../../Repository/Inventory/subCategoryRepo")
 const router=express.Router();
 router.get('/',repo.GetAll,(req,res)=>{
     res.json({"data":res.data,"Success":0,"haserror":false
@@ -11,7 +11,7 @@ router.get('/:id',repo.Get,( req , res)=>{
 });
 })
 //geting one
-router.get('/getbystoreid/:storeId',repo.GetByStoreId,( req , res)=>{
+router.get('/getbycategoryid/:categoryId',repo.GetByCategoryId,( req , res)=>{
     res.json({"data":res.data,"Success":0,"haserror":false
 });
 })

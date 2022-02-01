@@ -16,13 +16,6 @@ router.post('/',repo.Save,(req,res)=>{
     res.json({"data":res.data,"Success":0,"haserror":false
 });
 })
-//update
-router.patch('/:id',repo.Save,(req,res)=>{
-
-    res.json({"data":res.data,"Success":0,"haserror":false,"Message": res.message
-});
-
-})
 //delete
 router.delete('/:id',repo.Delete,(req,res)=>{
 

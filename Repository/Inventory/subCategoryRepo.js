@@ -6,8 +6,8 @@ module.exports={
      
          try {
            
-             let branchs=await prisma.branch.findMany({where:{isRemoved:false,}});
-             res.data=branchs;
+             let subCategorys=await prisma.subCategory.findMany({where:{isRemoved:false,}});
+             res.data=subCategorys;
          } catch (error) {
              res.status(500).json({message:error.message});
          }
@@ -18,8 +18,8 @@ module.exports={
       try {
          const id=parseInt(req.params.id);
            if(!isNaN(id)){
-            let branch=await prisma.branch.findFirst({where:{isRemoved:false,id:id}});
-            res.data=branch;          
+            let subCategory=await prisma.subCategory.findFirst({where:{isRemoved:false,id:id}});
+            res.data=subCategory;          
            }
            else{
  
@@ -31,12 +31,12 @@ module.exports={
 
      next();
      },
-     async GetByStoreId(req,res,next){
+     async GetByCategoryId(req,res,next){
         try {
-           const storeId=parseInt(req.params.storeId);
+           const categoryId=parseInt(req.params.categoryId);
              if(!isNaN(id)){
-              let branch=await prisma.branch.findMany({where:{isRemoved:false,storeId:storeId}});
-              res.data=branch;          
+              let subCategory=await prisma.subCategory.findMany({where:{isRemoved:false,categoryId:categoryId}});
+              res.data=subCategory;          
              }
              else{
    
@@ -51,41 +51,29 @@ module.exports={
      async Save(req,res,next){
 
          try {
-            let branch;
+            let subCategory;
             const id=parseInt(req.body.id);
             if(!isNaN(id) && id>0){
-                branch = await prisma.branch.update({where:{id:id},data:{                    
+                subCategory = await prisma.subCategory.update({where:{id:id},data:{                    
                     descrpiction:req.body.descrpiction,
-                    email:req.body.email,
-                    facebookLink:req.body.facebookLink,
                     name:req.body.name,
                     isRemoved:false,
-                    primaryPhone:req.body.primaryPhone,
-                    secondaryPhone:req.body.secondaryPhone,
-                    webaddress:req.body.webaddress,
-                    youtubeLink:req.body.youtubeLink,
-                    storeId:parseInt(req.body.storeId),
+                    categoryId:parseInt(req.body.categoryId),
                     updatedAt:new Date(Date.now()), 
                 }});
-               res.message="branch successfully updated."; 
+               res.message="subCategory successfully updated."; 
             }else{
-                branch = await prisma.branch.create({data:{
+                subCategory = await prisma.subCategory.create({data:{
                     descrpiction:req.body.descrpiction,
-                    email:req.body.email,
-                    facebookLink:req.body.facebookLink,
                     name:req.body.name,
                     isRemoved:false,
-                    primaryPhone:req.body.primaryPhone,
-                    secondaryPhone:req.body.secondaryPhone,
-                    webaddress:req.body.webaddress,
-                    youtubeLink:req.body.youtubeLink,
-                    storeId:parseInt(req.body.storeId),
+                    categoryId:parseInt(req.body.categoryId),
                     updatedAt:new Date(Date.now()),
                 }});
-               res.message="branch successfully saved."; 
+               res.message="subCategory successfully saved."; 
             }
         
-         res.data=branch;    
+         res.data=subCategory;    
          } catch (error) {
          res.status(500).json({message:error.message});
 
@@ -96,8 +84,8 @@ module.exports={
         
          try {
             const id=parseInt(req.params.id);
-            let branch= await prisma.branch.update({where:{id:id},data:{isRemoved:true}});
-            res.data=branch; 
+            let subCategory= await prisma.subCategory.update({where:{id:id},data:{isRemoved:true}});
+            res.data=subCategory; 
             res.message="user type successfully deleted."; 
              
          } catch (error) {
