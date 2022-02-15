@@ -38,8 +38,8 @@ app.use('/api/category',ISAuthentic,categoryRouter);
 app.use('/api/subcategory',ISAuthentic,subCategoryRouter);
 app.use('/api/item',ISAuthentic,itemRouter);
 app.use('/api/item/details',ISAuthentic,itemDetailsRouter);
+app.use(express.static(__dirname + "/public"));
 
 
 
-
-app.listen(process.env.port,()=>console.log('Server Started at port 69'));
+app.listen(process.env.port,()=>console.log('Server Started at port 8080'));
