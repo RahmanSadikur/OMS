@@ -9,9 +9,10 @@ module.exports={
          const user= await prisma.credential.findFirst({where:{userName:req.body.userName,isRemoved:false}});
          if(user!=null||user!=undefined){
             if((await user).password==req.body.password){
-                  user.password==undefined;
+                  user.password=undefined;
                   const jsontoken=sign({User:user},process.env.tokenSecret,{expiresIn:"12h"})
                   res.token=jsontoken;
+                  
                   next();
             }else{
                res.status(404).json({message:"Password Doesn\'t Match"});

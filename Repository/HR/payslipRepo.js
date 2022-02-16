@@ -48,6 +48,7 @@ module.exports={
             },
         },
     });
+             
               res.data=paySlip;          
              }
              else{

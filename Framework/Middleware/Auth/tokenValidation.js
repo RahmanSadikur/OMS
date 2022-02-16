@@ -11,6 +11,8 @@ module.exports={
                             message:"invalid token" 
                         });
                     }else{
+                       // console.log(decoded);
+                        res.userID=decoded.User.id;
                         next();
                     }
             });
