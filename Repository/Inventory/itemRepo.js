@@ -14,6 +14,22 @@ module.exports={
     
          next();
      },
+     async GetAllItemName(req,res,next){
+     
+        try {
+          let data=[];
+            let items=await prisma.item.findMany({where:{isRemoved:false,}});
+            items.forEach(e => {
+                data.push(e.name+"["+e.id+"]");
+                
+            });
+            res.data=data;
+        } catch (error) {
+            res.status(500).json({message:error.message});
+        }
+   
+        next();
+    },
      async Get(req,res,next){
       try {
          const id=parseInt(req.params.id);

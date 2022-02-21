@@ -43,8 +43,10 @@ module.exports={
      },
      async GetByItemId(req,res,next){
         try {
+
            const itemId=parseInt(req.params.itemId);
-             if(!isNaN(id)){
+           
+             if(!isNaN(itemId)){
               let itemDetails=await prisma.itemDetails.findMany({where:{
                   isRemoved:false,
                   itemId:itemId}
@@ -52,6 +54,7 @@ module.exports={
                       item:true,
                     }
                 });
+                console.log(itemDetails);
               res.data=itemDetails;          
              }
              else{

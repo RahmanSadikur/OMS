@@ -5,6 +5,11 @@ router.get('/',repo.GetAll,(req,res)=>{
     res.json({"data":res.data,"Success":0,"haserror":false
 });
 })
+//search autocomplet
+router.get('/searchlist',repo.GetAllItemName,(req,res)=>{
+    res.json({"data":res.data,"Success":0,"haserror":false
+});
+})
 //geting one
 router.get('/:id',repo.Get,( req , res)=>{
     res.json({"data":res.data,"Success":0,"haserror":false
