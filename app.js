@@ -40,6 +40,6 @@ app.use('/api/item',ISAuthentic,itemRouter);
 app.use('/api/item/details',ISAuthentic,itemDetailsRouter);
 app.use(express.static(__dirname + "/public"));
 
+port=process.env.port
 
-
-app.listen(process.env.port,()=>console.log('Server Started at port 8080'));
+app.listen(process.env.port,()=>console.log(`Server Started at port ${port}`));
