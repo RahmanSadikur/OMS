@@ -194,10 +194,10 @@ model UserType {
     id Int @id @default(autoincrement())  
     totalQuantity Float @db.Double @default(0.0)
     totalPrice Float @db.Double @default(0.0)
-    size Int @db.Int
+    size Int @db.Int @unique
     itemDetails ItemDetails @relation(fields: [size],references: [id])
     item Item @relation(fields: [itemId],references: [id])
-    itemId Int @db.Int
+    itemId Int @db.Int @unique
     isRemoved Boolean @db.Bit(1) @default(false)
     updatedAt DateTime @updatedAt @default(now())
     order Order @relation(fields: [orderId],references: [id])
@@ -258,10 +258,10 @@ model UserType {
     id Int @id @default(autoincrement())
     totalQuantity Float @db.Double @default(0.0)
     totalPrice Float @db.Double @default(0.0)
-    size Int @db.Int
+    size Int @db.Int @unique
     itemDetails ItemDetails @relation(fields: [size],references: [id])
     item Item @relation(fields: [itemId],references: [id])
-    itemId Int @db.Int
+    itemId Int @db.Int @unique
     isRemoved Boolean @db.Bit(1) @default(false)
     updatedAt DateTime @updatedAt @default(now())
     chalan Chalan @relation(fields: [chalanId],references: [id]) 
