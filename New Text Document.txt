@@ -1,3 +1,11 @@
 DATABASE_URL=mysql://root:@127.0.0.1:3306/orm
 port=1401
 tokenSecret=asfrhtykhnbvctykjhgyhgfsyhgdthy
+
+npx prisma init
+npx prisma migrate dev --name init2023
+prisma generate
+
+prisma db pull
+
+DATABASE_URL="sqlserver://SADIKUR:1433;database=oms_db;integratedSecurity=true;trustServerCertificate=true"

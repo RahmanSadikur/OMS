@@ -9,7 +9,9 @@ generator client {
 
 datasource db {
 
-  provider = "mysql"
+  //provider = "mysql"
+  //url      = env("DATABASE_URL")
+  provider = "sqlserver"
   url      = env("DATABASE_URL")
 }
 
@@ -19,7 +21,7 @@ model UserType {
     id        Int      @id @default(autoincrement())
     title     String   @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
-    isRemoved Boolean @db.Bit(1) @default(false)
+    isRemoved Boolean @db.Bit() @default(false)
     users User[]
   
   }
@@ -30,11 +32,11 @@ model UserType {
     nid String @db.VarChar(15)
     phone String @db.VarChar(11)
     userTypeId Int @db.Int
-    dailywages Float @db.Double
+    dailywages Float @db.Float()
     updatedAt DateTime @updatedAt @default(now())
-    isRemoved Boolean @db.Bit(1) @default(false)
-    usertType UserType @relation(fields: [userTypeId], references: [id])
-    permission Permission?
+    isRemoved Boolean @db.Bit() @default(false)
+    usertType UserType @relation(fields: [userTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    permission Permission[]
     credential Credential?
     access Access[]
     paySlips PaySlip[]
@@ -45,19 +47,19 @@ model UserType {
     userName String @db.VarChar(250)
     password String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
-    isRemoved Boolean @db.Bit(1) @default(false)
+    isRemoved Boolean @db.Bit() @default(false)
     user   User @relation(fields: [id], references: [id])
    
   }
     model PaySlip{
     id     Int  @id @db.Int @default(autoincrement())
     day DateTime @db.Date() @default(now())
-    total Float @db.Double
+    total Float @db.Float()
     description String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
     userId Int @db.Int
-    isRemoved Boolean @db.Bit(1) @default(false)
-    user   User @relation(fields: [userId], references: [id])
+    isRemoved Boolean @db.Bit() @default(false)
+    user   User @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
    
   }
@@ -75,7 +77,7 @@ model UserType {
     facebookLink String @db.VarChar(250)
     youtubeLink String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
-    isRemoved Boolean @db.Bit(1) @default(false)
+    isRemoved Boolean @db.Bit() @default(false)
     branch Branch[]
     
   }
@@ -91,8 +93,8 @@ model UserType {
     youtubeLink String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
     storeId Int @db.Int
-    isRemoved Boolean @db.Bit(1) @default(false)
-    store Store @relation(fields: [storeId], references: [id])
+    isRemoved Boolean @db.Bit() @default(false)
+    store Store @relation(fields: [storeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     sites Site[]
     categories CategoryBranchMap[]
     access Access[]
@@ -104,8 +106,8 @@ model UserType {
     descrpiction String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
     branchId Int @db.Int
-    isRemoved Boolean @db.Bit(1) @default(false)
-    branch Branch @relation(fields: [branchId],references: [id])
+    isRemoved Boolean @db.Bit() @default(false)
+    branch Branch @relation(fields: [branchId],references: [id], onDelete: NoAction, onUpdate: NoAction)
     items SiteItemDetailMap[] 
     
   }
@@ -114,7 +116,7 @@ model UserType {
     name String @db.VarChar(250)
     descrpiction String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
-    isRemoved Boolean @db.Bit(1) @default(false)
+    isRemoved Boolean @db.Bit() @default(false)
     subCategories SubCategory[]
     branchs CategoryBranchMap[]
   }
@@ -124,8 +126,8 @@ model UserType {
     descrpiction String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
     categoryId Int @db.Int
-    isRemoved Boolean @db.Bit(1) @default(false)
-    category Category @relation(fields: [categoryId],references: [id])
+    isRemoved Boolean @db.Bit() @default(false)
+    category Category @relation(fields: [categoryId],references: [id], onDelete: NoAction, onUpdate: NoAction)
     items Item[]
   }
     model Item{
@@ -134,22 +136,22 @@ model UserType {
     descrpiction String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
     subCategoryId Int @db.Int
-    isRemoved Boolean @db.Bit(1) @default(false)
-    subCategory SubCategory @relation(fields: [subCategoryId],references: [id])
+    isRemoved Boolean @db.Bit() @default(false)
+    subCategory SubCategory @relation(fields: [subCategoryId],references: [id], onDelete: NoAction, onUpdate: NoAction)
     itemDetails ItemDetails[]
     orderItem OrderItem?
     chalanItem ChalanItem?
   }
    model ItemDetails{
     id Int @id @default(autoincrement())
-    quantity Float @db.Double
+    quantity Float @db.Float()
     size String @db.VarChar(250)
-    basePrice Float @db.Double
-    selling Float @db.Double
+    basePrice Float @db.Float()
+    selling Float @db.Float()
     descrpiction String @db.VarChar(250)
     updatedAt DateTime @updatedAt @default(now())
-    isRemoved Boolean @db.Bit(1) @default(false)
-    item Item @relation(fields: [itemId],references: [id])
+    isRemoved Boolean @db.Bit() @default(false)
+    item Item @relation(fields: [itemId],references: [id], onDelete: NoAction, onUpdate: NoAction)
     itemId Int @db.Int
     orderItem OrderItem?
     chalanItem ChalanItem?
@@ -157,20 +159,20 @@ model UserType {
   }
    model SiteItemDetailMap{
     siteId Int
-    site Site  @relation(fields: [siteId], references: [id])
+    site Site  @relation(fields: [siteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     itemDetailId Int
-    itemDetail ItemDetails  @relation(fields: [itemDetailId], references: [id])
-    isRemoved Boolean @db.Bit(1) @default(false)
+    itemDetail ItemDetails  @relation(fields: [itemDetailId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    isRemoved Boolean @db.Bit() @default(false)
     quantity Int
     updatedAt DateTime @updatedAt @default(now())
      @@id([siteId, itemDetailId])
   }
      model CategoryBranchMap{
     categoryId Int
-    category Category  @relation(fields: [categoryId], references: [id])
+    category Category  @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     branchId Int
-    branch Branch  @relation(fields: [branchId], references: [id])
-    isRemoved Boolean @db.Bit(1) @default(false)
+    branch Branch  @relation(fields: [branchId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    isRemoved Boolean @db.Bit() @default(false)
     updatedAt DateTime @updatedAt @default(now())
      @@id([branchId, categoryId])
   }
@@ -180,27 +182,27 @@ model UserType {
     buyerName String @db.VarChar(250) 
     buyerPhone String @db.VarChar(11) 
     descrpiction String @db.VarChar(250)
-    totalQuantity Float @db.Double @default(0.0)
-    totalPrice Float @db.Double @default(0.0)
-    payedMoney Float @db.Double @default(0.0)
-    balance Float @db.Double @default(0.0)
-    isCompleted Boolean @db.Bit(1) @default(false)
-    isRemoved Boolean @db.Bit(1) @default(false)
+    totalQuantity Float @db.Float() @default(0.0)
+    totalPrice Float @db.Float() @default(0.0)
+    payedMoney Float @db.Float() @default(0.0)
+    balance Float @db.Float() @default(0.0)
+    isCompleted Boolean @db.Bit() @default(false)
+    isRemoved Boolean @db.Bit() @default(false)
     orderDate DateTime @updatedAt @default(now())   
     updatedAt DateTime @updatedAt @default(now())
     orderItems OrderItem[]
   }
     model OrderItem{
     id Int @id @default(autoincrement())  
-    totalQuantity Float @db.Double @default(0.0)
-    totalPrice Float @db.Double @default(0.0)
+    totalQuantity Float @db.Float() @default(0.0)
+    totalPrice Float @db.Float() @default(0.0)
     size Int @db.Int @unique
-    itemDetails ItemDetails @relation(fields: [size],references: [id])
-    item Item @relation(fields: [itemId],references: [id])
+    itemDetails ItemDetails @relation(fields: [size],references: [id], onDelete: NoAction, onUpdate: NoAction)
+    item Item @relation(fields: [itemId],references: [id], onDelete: NoAction, onUpdate: NoAction)
     itemId Int @db.Int @unique
-    isRemoved Boolean @db.Bit(1) @default(false)
+    isRemoved Boolean @db.Bit() @default(false)
     updatedAt DateTime @updatedAt @default(now())
-    order Order @relation(fields: [orderId],references: [id])
+    order Order @relation(fields: [orderId],references: [id], onDelete: NoAction, onUpdate: NoAction)
     orderId Int @db.Int
   }
   //  model OrderItemMap{
@@ -214,26 +216,28 @@ model UserType {
   // }
   //permission
     model Permission{
-    id     Int  @id @db.Int
-    user   User @relation(fields: [id], references: [id])
+    id     Int  @id   @default(autoincrement()) 
+    user   User @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     userId Int @db.Int
-    hasHRPermission Boolean @db.Bit(1)
-    hasSellPermission Boolean @db.Bit(1)
-    hasBuyPermission Boolean @db.Bit(1)
-    hasChalanPermission Boolean @db.Bit(1)
-    hasInventoryPermission Boolean @db.Bit(1)
-    hasAccountPermission Boolean @db.Bit(1)
-    hasOverViewPermission Boolean @db.Bit(1)
-    isRemoved Boolean @db.Bit(1) @default(false)
-     updatedAt DateTime @updatedAt @default(now())
+    permissionModules PermissionModule @relation(fields: [permissionModuleID],references: [id], onDelete: NoAction, onUpdate: NoAction)
+    permissionModuleID Int @db.Int
+    isRemoved Boolean @db.Bit() @default(false)
+    updatedAt DateTime @updatedAt @default(now())
+  }
+   model PermissionModule{
+    id  Int @id   @default(autoincrement()) 
+    ModuleName String @db.VarChar(250) 
+    isRemoved Boolean @db.Bit() @default(false)
+    updatedAt DateTime @updatedAt @default(now())
+    permission Permission[]
   }
   model Access{
     userId Int
-    user User  @relation(fields: [userId], references: [id])
+    user User  @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     branchId Int
-    branch Branch  @relation(fields: [branchId], references: [id])
+    branch Branch  @relation(fields: [branchId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     hasAccess Boolean @default(false)
-    isRemoved Boolean @db.Bit(1) @default(false)
+    isRemoved Boolean @db.Bit() @default(false)
     updatedAt DateTime @updatedAt @default(now())
      @@id([userId, branchId])
   }
@@ -244,48 +248,40 @@ model UserType {
     sellerAddress String @db.VarChar(250) 
     sellerPhone String @db.VarChar(11) 
     descrpiction String @db.VarChar(250)
-    totalQuantity Float @db.Double @default(0.0)
-    totalPrice Float @db.Double @default(0.0)
-    payedMoney Float @db.Double @default(0.0)
-    due Float @db.Double @default(0.0)
-    isCompleted Boolean @db.Bit(1) @default(false)
-    isRemoved Boolean @db.Bit(1) @default(false)   
+    totalQuantity Float @db.Float() @default(0.0)
+    totalPrice Float @db.Float() @default(0.0)
+    payedMoney Float @db.Float() @default(0.0)
+    due Float @db.Float() @default(0.0)
+    isCompleted Boolean @db.Bit() @default(false)
+    isRemoved Boolean @db.Bit() @default(false)   
     chalanDate DateTime @updatedAt @default(now())
     updatedAt DateTime @updatedAt @default(now())
     ChalanItems ChalanItem[]
   }
     model ChalanItem{
     id Int @id @default(autoincrement())
-    totalQuantity Float @db.Double @default(0.0)
-    totalPrice Float @db.Double @default(0.0)
+    totalQuantity Float @db.Float() @default(0.0)
+    totalPrice Float @db.Float() @default(0.0)
     size Int @db.Int @unique
-    itemDetails ItemDetails @relation(fields: [size],references: [id])
-    item Item @relation(fields: [itemId],references: [id])
+    itemDetails ItemDetails @relation(fields: [size],references: [id], onDelete: NoAction, onUpdate: NoAction)
+    item Item @relation(fields: [itemId],references: [id], onDelete: NoAction, onUpdate: NoAction)
     itemId Int @db.Int @unique
-    isRemoved Boolean @db.Bit(1) @default(false)
+    isRemoved Boolean @db.Bit() @default(false)
     updatedAt DateTime @updatedAt @default(now())
     chalan Chalan @relation(fields: [chalanId],references: [id]) 
     chalanId Int @db.Int
     
   }
-  //  model ChalanItemMap{
-  //   chalanId Int
-  //   chalan Chalan  @relation(fields: [chalanId], references: [id])
-  //   chalanItemId Int
-  //   chalanItem ChalanItem  @relation(fields: [chalanItemId], references: [id])
-  //   isRemoved Boolean @db.Bit(1) @default(false)
-  //   updatedAt DateTime @updatedAt @default(now())
-  //    @@id([chalanId, chalanItemId])
-  // }
+
   //Expense
     model VividExpense{
     id Int @id @default(autoincrement())
     date DateTime @updatedAt @default(now())
-    totalcost Float @db.Double @default(0.0)
+    totalcost Float @db.Float() @default(0.0)
     description String @db.VarChar(250)
-    branch Branch @relation(fields: [branchId],references: [id])
+    branch Branch @relation(fields: [branchId],references: [id], onDelete: NoAction, onUpdate: NoAction)
     branchId Int @db.Int
-    isRemoved Boolean @db.Bit(1) @default(false)
+    isRemoved Boolean @db.Bit() @default(false)
     updatedAt DateTime @updatedAt @default(now())
    
   }
