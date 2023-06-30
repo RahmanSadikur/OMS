@@ -15,16 +15,16 @@ module.exports={
                   
                   next();
             }else{
-               res.status(404).json({message:"Password Doesn\'t Match"});
+               res.status(200).json({message:"Password Doesn\'t Match",hasError:true});
             }
 
          }
          else{
-            res.status(404).json({message:"User Not Found"});
+            res.status(200).json({message:"User Not Found",hasError:true});
          }
              
          } catch (error) {
-            res.status(500).json({message:error.message});
+            res.status(200).json({message:error.message,hasError:true});
          }
         
      },
@@ -32,7 +32,7 @@ module.exports={
          try {
              
          } catch (error) {
-             res.status(500).json({message:error.message});
+             res.status(200).json({message:error.message,hasError:true});
          }
          next();
      },

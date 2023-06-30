@@ -27,7 +27,9 @@ module.exports={
            }
 
      } catch (error) {
-         res.status(500).json({message:error.message});
+        res.data={}
+            res.hasError=true;
+            res.message=error.message
      }
 
      next();
@@ -47,7 +49,10 @@ module.exports={
         
          res.data=usertype;    
          } catch (error) {
-         res.status(500).json({message:error.message});
+            res.data={}
+            res.hasError=true;
+            res.message=error.message
+        // res.status(500).json({message:error.message});
 
          }
          next();
@@ -61,7 +66,9 @@ module.exports={
             res.message="user type successfully deleted."; 
              
          } catch (error) {
-             res.status(500).json({message:error.message});
+            res.data={}
+            res.hasError=true;
+            res.message=error.message
          }
       
          next();

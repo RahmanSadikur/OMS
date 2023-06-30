@@ -13,13 +13,13 @@ router.get('/:id',repo.Get,( req , res)=>{
 //save
 router.post('/',repo.Save,(req,res)=>{
 
-    res.json({"data":res.data,"Success":0,"haserror":false
+    res.json({"data":res.data,"Success":0,"hasError":res.hasError,"Message": res.message
 });
 })
 //update
 router.patch('/:id',repo.Save,(req,res)=>{
 
-    res.json({"data":res.data,"Success":0,"haserror":false,"Message": res.message
+    res.json({"data":res.data,"Success":0,"hasError":res.hasError,"Message": res.message
 });
 
 })
